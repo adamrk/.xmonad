@@ -24,9 +24,9 @@ backlightDevice = "/sys/class/backlight/intel_backlight/brightness"
 
 --max brightness is 189 so adjust by multiples of 9
 brightUpCommand :: X ()
-brightUpCommand = spawn $ "echo $(((`cat " ++ backlightDevice ++"` / 9 + 1) * 9)) >> " ++ backlightDevice
+brightUpCommand = spawn $ "echo $(((`cat " ++ backlightDevice ++"` / 9 + 1) * 9)) | tee " ++ backlightDevice
 brightDownCommand :: X ()
-brightDownCommand = spawn $ "echo $(((`cat " ++ backlightDevice ++"` / 9 - 1) * 9)) >> " ++ backlightDevice
+brightDownCommand = spawn $ "echo $(((`cat " ++ backlightDevice ++"` / 9 - 1) * 9)) | tee " ++ backlightDevice
 
 brightnessKeys = [ ((0, xF86XK_MonBrightnessUp ), brightUpCommand)
                  , ((0, xF86XK_MonBrightnessDown ), brightDownCommand)
@@ -47,7 +47,7 @@ main = do
     (
       [ ((mod4Mask .|. shiftMask, xK_z), spawn "xscreensaver-command -lock; xset dpms force off")
       , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
-      , ((0, xK_Print), spawn "scrot")
+      , ((0, xK_Print), spawn "scrot $HOME/pictures/screenshots/%Y-%m-%d-%H:%M:%S.png")
       
       -- as recommended in the version 0.12 doc for XMonad.Hooks.ManageDocks on Hackage
       , ((mod4Mask, xK_b ), sendMessage ToggleStruts)
