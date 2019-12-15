@@ -35,9 +35,9 @@ brightnessKeys = [ ((0, xF86XK_MonBrightnessUp ), brightUpCommand)
 main = do
   xmproc <- spawnPipe "xmobar"
   
-  xmonad $  defaultConfig
-    { manageHook = manageDocks <+> manageHook defaultConfig
-    , layoutHook = avoidStruts $ smartBorders $ layoutHook defaultConfig
+  xmonad $ docks $ def
+    { manageHook = manageDocks <+> manageHook def
+    , layoutHook = smartBorders . avoidStruts $ layoutHook def
     , logHook = dynamicLogWithPP xmobarPP
                   { ppOutput = hPutStrLn xmproc
                   , ppTitle = xmobarColor "green" "" . shorten 50
